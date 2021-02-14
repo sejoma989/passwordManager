@@ -15,6 +15,9 @@ app.get('/', (req, res) => {
     res.send("Hello Mundo from nodejs and express!!");
 });
 
+app.post('addpassword', (req, res) => {
+    
+})
 
 app.listen(PORT, () => {
     console.log('Server is running');

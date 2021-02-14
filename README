@@ -21,6 +21,8 @@ Dentro se crean 2 carpetas:
 En la carpeta cliente se instala la aplicacion de React:
 #npx create-react-app .
 
+/server 
+
 En el servidor es necesario iniciar la aplicacion de nodeJS e instalar Express:
 #npm init
 #npm install express mysql 
@@ -72,13 +74,31 @@ Para conectar la aplicacion con la tabla, es necesario llamar el modulo de mysql
 conexion es necesario crear un objeto db, que representa todas las querys a la base de datos, este objeto tiene
 unos parametros que pertenecen a la configuracion de mysql
 
+/client 
+
 Luego se pasa al lado del cliente en react, en esta carpeta, hay una que se llama
 src que tiene algunos archivos que no son utiles:
 App.text.js, index.css, logo.svg, setupTest.js
 por lo que se borran, ademas se eliminan todas las referencias a estos archivos
 en /index.js a index.css 
-en /app.js a logo y se deja limpio el archivo app.js
+en /app.js a logo y se deja limpio el archivo app.js para comenzar a crear la estructura html
 
+En App.css se le da estilo al front de la aplicacion de react para poder trabajar con ella
+
+Ahora hay que encontrar la manera en como se va a enviar la informacion del front que se escriba en los formularios
+al back de node JS, esto se va a hacer a traves de estados o states,
+las cuales son variables con laas que se pueden desencadenar renders o vistas
+cuando se cambien los valores
+Lo primero es importar userState del modulo de react 
+Luego se crean las variables que almacenaran los cambios, una por cada celda 
+Despues se programan los estados dentro de las cajas de texto, para qeu cada que cambie la celda, almacene los datos
+dentro de la variable correspondiente, co una funcion onChange que detecta los cambios
+Co esto se tienen las variables que se le quieren enviar a la base de datos
+
+En este momento ya se puede ingresar datos a la base de datos, solo se necesita crear la ruta en el backend accesible
+para insertar esos datos
+
+Para esto se va a /server/index.js y se crea una ruta post en "/addpassword"
 
 
 
