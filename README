@@ -49,6 +49,8 @@ Para no estar reiniciando el servidor cada que se haga un cambio se instala el m
 Se hace un cambio en /package.json, se agrega un atributo scripts,
 dentro del cual va otro atributo start : "nodemon index.js", de esta manera cada que se llama a start 
 se ejecuta este comando para que los cambios se actualicen solos.
+con el siguiente comando se ejecuta la aplicacion
+#npm start
 
 Ahora se va a hacer conexion con la base de datos, para lo cual se descarga
 la herramienta MYSQL Workbench. que requiere mysql-server corriendo en el equipo
@@ -69,6 +71,15 @@ Se le da apply en la esquina derecha para crear la tabla.
 Para conectar la aplicacion con la tabla, es necesario llamar el modulo de mysql, para crear la 
 conexion es necesario crear un objeto db, que representa todas las querys a la base de datos, este objeto tiene
 unos parametros que pertenecen a la configuracion de mysql
+
+Luego se pasa al lado del cliente en react, en esta carpeta, hay una que se llama
+src que tiene algunos archivos que no son utiles:
+App.text.js, index.css, logo.svg, setupTest.js
+por lo que se borran, ademas se eliminan todas las referencias a estos archivos
+en /index.js a index.css 
+en /app.js a logo y se deja limpio el archivo app.js
+
+
 
 
 
