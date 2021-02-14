@@ -1,0 +1,77 @@
+Proyecto de un manejador sencillo de contraseñas:
+
+Agregar nuevas contraseñas
+Borrar contraseñas
+Encriptar - Desencriptar passwords (Crypto)
+
+Front: React JS & Material UI
+Back: Node JS & Express creacion de api
+BD: MySQL
+
+La idea es poder tener todas las contraseñas de los servicios en un solo lugar almacenadas de manera segura y encriptada, 
+por razones de seguridad no permitirá agregar contraseñas básicas
+
+Se crea la carpeta del proyecto:
+/PASSWORD MANAGER
+
+Dentro se crean 2 carpetas:
+/client: Almacena la aplicacion de React
+/server: Almacena la aplicacion creada con Node y Express
+
+En la carpeta cliente se instala la aplicacion de React:
+#npx create-react-app .
+
+En el servidor es necesario iniciar la aplicacion de nodeJS e instalar Express:
+#npm init
+#npm install express mysql 
+
+Es necesario instalar cors el cual permite la conexion entre la api de front y la api del back 
+#npm install cors 
+
+Ahora es necesario crear el punto de entrada para nuestro servidor, en package.json muestra por defecto a index.js 
+por lo tanto se crea un archivo con este nombre.
+
+En este archivo se llama a express y se crea una variable puerto que almacena
+el puerto de conexion, sera 3001 ya que React corre en el 3000
+
+Al metodo listen se pasa el puerto y una funcion que se va a ejecutar cuando el servidor
+establece conexion.
+
+Se verifica la conexion con el parametro:
+#node index.js 
+Cannot GET / -> Significa que la api esta corriendo pero aun no se le han creado rutas
+
+Se crea una funcion GET con la ruta / para hacer una prueba de las rutas
+
+Para no estar reiniciando el servidor cada que se haga un cambio se instala el modulo nodemon
+#npm install nodemon 
+
+Se hace un cambio en /package.json, se agrega un atributo scripts,
+dentro del cual va otro atributo start : "nodemon index.js", de esta manera cada que se llama a start 
+se ejecuta este comando para que los cambios se actualicen solos.
+
+Ahora se va a hacer conexion con la base de datos, para lo cual se descarga
+la herramienta MYSQL Workbench. que requiere mysql-server corriendo en el equipo
+
+Se crea un nuevo esquema en la instancia local de la base de datos en el puerto 3306
+con el nombre 'PasswordManager', que será la base de datos para este proyecto 
+Dentro de esta se crea una tabla llamada passwords, con los campos:
+{
+    id:primary key not null, auto incremental,
+    name: website name,
+    url: website url exact login,
+    username: email to log into the website,
+    password: ****** password for the site
+    }
+
+Se le da apply en la esquina derecha para crear la tabla.
+
+Para conectar la aplicacion con la tabla, es necesario llamar el modulo de mysql, para crear la 
+conexion es necesario crear un objeto db, que representa todas las querys a la base de datos, este objeto tiene
+unos parametros que pertenecen a la configuracion de mysql
+
+
+
+
+
+
