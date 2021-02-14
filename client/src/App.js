@@ -1,12 +1,22 @@
 import './App.css';
 import {useState} from 'react';
+import Axios from 'axios';
 
 function App() {
 
-  const [name, setName] = useState('')
-  const [url, setUrl] = useState('')
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [name, setName] = useState('');
+  const [url, setUrl] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const addPassword = () => {
+    Axios.post('http://localhost:3001/addpassword', {
+      name: name, 
+      url: url, 
+      username: username, 
+      password: password
+    });    
+  }
 
   return <div className="App">
     <div className="AddingPassword">
@@ -39,7 +49,7 @@ function App() {
           setPassword(event.target.value);
         }}
       />
-      <button>Add password</button>
+      <button onClick={addPassword}>Add password</button>
     </div>
   </div>
 }
