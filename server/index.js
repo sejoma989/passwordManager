@@ -4,6 +4,8 @@ const mysql = require('mysql');
 const cors = require('cors');
 const PORT = 3001;
 
+const {encrypt, decrypt} = require("./EncryptionManager");
+
 app.use(cors());
 app.use(express.json());
 
@@ -16,7 +18,7 @@ const db = mysql.createConnection({
 
 
 app.get('/', (req, res) => {
-    res.send("Hello Mundo from nodejs and express!!");
+    res.send("Hello World!! This is an app running nodejs on express!!");
 });
 
 app.post('/addpassword', (req, res) => {
