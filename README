@@ -193,7 +193,15 @@ Al final se retorna la variable encryptedPassword la cual es un buffer y necesit
 string. por lo cual se retorna con el metodo toString usando la codificacion de buffer
 Hex, que combina numeros y caracteres. Hasta este punto se retorna un hash encriptado en formato string 
 Sin embargo para desencriptarlo no basta solo con pasar el valor del hash, es necesario pasar el identificador tambien, por eso
-se guardan los dos valorees en la funcion encrypt como un objeto
+se guardan los dos valorees en la funcion encrypt como un objeto que se retorna desde encryp.
+Se crea la funcion decypher que recibe una encriptacion, el objeto que entrega la funcion cypher.
+Se crea una constante que almacena de manera similar a cypher, un decipher que es el 
+desencriptador, el cual recibe los parametros desde la funcion cypher- Por lo tanto se accede
+a los valores dentro de la funcion encrypt a traves de la variable encryption creando un buffer
+para ambas vbariables, la palabra secreta y el iv, pasando como tercer argumento que se quiere un hex
+Hasta este punto se transforma a un buffer desde el valor hex recibido de la funcion creada previamente.
+Como punto funal se desencripta la contraseña usando el hash conseguido, por lo que se concatena en un 
+buffer usando como primer argumento el buffer
 
 
 
