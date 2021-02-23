@@ -6,8 +6,8 @@ const encrypt = (password) => {
     const cipher = crypto.createCipheriv(
         'aes-256-ctr', 
         Buffer.from(secret), 
-        iv)
-        ;
+        iv
+    );       
 
     const encryptedPassword = Buffer.concat([
         cipher.update(password),
@@ -32,7 +32,7 @@ const decrypt = (encryption) => {
         decipher.final(),
     ]);
 
-    return decryptedPassword.toString("hex")
+    return decryptedPassword.toString()
 };
 
 module.exports = {encrypt, decrypt};

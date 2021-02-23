@@ -23,10 +23,12 @@ app.get('/', (req, res) => {
 
 app.post('/addpassword', (req, res) => {
    const {name, url, username, password} = req.body; 
+   const hashedPassword = encrypt(password);
+
 
    db.query(
-       "INSERT INTO passwords (name, url, username, password) VALUES (?,?,?,?)",
-       [name, url, username, password], 
+       "INSERT INTO passwords (name, url, username, password, iv) VALUES (?,?,?,?,?)",
+       [name, url, username, hashedPassword.password, hashedPassword.iv], 
        (err, result) => {
            if (err) {
                console.log(err);
