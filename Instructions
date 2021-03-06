@@ -220,19 +220,30 @@ se pasan los valores de hashedPassword password y iv para guardar en BD
 Episodio 3
 
 Construir ruta para desencriptar las contraseñas.
-En esta ruta se van a mostrar las constraseñas para poder usarlas.
-Se crea la ruta /showpasswords , y en el mismo verbo get se crea una funcion req, res
-la cual contiene una funcion query, que contiene una funcion callback 
+En esta ruta lo que se quiere 
+es mostrar las constraseñas para poder usarlas.
+Se crea la ruta get /showpasswords en index.js , y en el mismo verbo get se crea
+una funcion req, res la cual contiene una funcion query, que contiene una funcion callback 
 que va a tomar un err y result y la data que se reciba de la base4 de datos 
-despues del statement se va a almacenar en result, antes de enviarlo 
-es necesario verificar si tiene algun error 
+despues del statement se va a almacenar en result, en este 
+caso todas las contraseñas, antes de enviarlo es necesario verificar si tiene algun error 
 
-Ya se tiene el get request, ahora se necesita invocar desde el frontend 
-Se va a usar una funcion use efect que va a renderizar y hacer le llamado a la api
-inmediatamente cuando entremos en la website
-Es necesario importar el useEffect junto al useState, que es una funcion que 
-se va a llamar cuando se necesite renderizar una vista o cuando se refresque o 
-cuando se quiera hacer 
+Get request en el front
+app.js 
+Ya se tiene el get request en el back, ahora se necesita invocar desde el frontend 
+Se va a usar una funcion useefect que renderiza y hace un llamado 
+a la api directamente al entrar en la website
+Use efect es una funcion simple que se invoca cada que se
+quiera recargar los datos.
+La idea es que s ehaga una recarga de los datos solo cuando cambie el estado de
+toda la pagina.
+Lo que se quiere correr en el ciclo del useEffect es un Axios.getrequest, donde se le 
+pasa la URL de la api 'http://localhost:3001/showpasswords') luego se puede pasar una promesa 
+que se ejecuta luego de que Axios.get recibe los datos del request en un objeto llamado response
+el cual tiene una propiedad data con todos los datos de la base de datos.
+Por ahora solo se muestra lo que tiene la base de datos por consola.
+En este momento cada que se cargue la pagina se hace una llamdo a la api y la consola muestra
+en un array los datos de la bd
 
 
 

@@ -9,6 +9,15 @@ function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  useEffect(()=> {
+    Axios.get('http://localhost:3001/showpasswords').then((response) => {
+      console.log(response.data);
+    });
+  }, []);//[]Siginica que se llama una vez  se carga la pagina 
+
+
+
+
   const addPassword = () => {
     Axios.post('http://localhost:3001/addpassword', {
       name: name, 
@@ -16,7 +25,7 @@ function App() {
       username: username, 
       password: password
     });    
-  }
+  };
 
   return <div className="App">
     <div className="AddingPassword">
