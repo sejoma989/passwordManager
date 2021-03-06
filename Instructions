@@ -217,6 +217,27 @@ almacenar el iv de cada uno de los passwords encriptados.
 Luego se procede a hacer los cambios en la operacion en la base de datos, 
 se pasan los valores de hashedPassword password y iv para guardar en BD
 
+Episodio 3
+
+Construir ruta para desencriptar las contraseñas.
+En esta ruta se van a mostrar las constraseñas para poder usarlas.
+Se crea la ruta /showpasswords , y en el mismo verbo get se crea una funcion req, res
+la cual contiene una funcion query, que contiene una funcion callback 
+que va a tomar un err y result y la data que se reciba de la base4 de datos 
+despues del statement se va a almacenar en result, antes de enviarlo 
+es necesario verificar si tiene algun error 
+
+Ya se tiene el get request, ahora se necesita invocar desde el frontend 
+Se va a usar una funcion use efect que va a renderizar y hacer le llamado a la api
+inmediatamente cuando entremos en la website
+Es necesario importar el useEffect junto al useState, que es una funcion que 
+se va a llamar cuando se necesite renderizar una vista o cuando se refresque o 
+cuando se quiera hacer 
+
+
+
+
+
 
 
 
