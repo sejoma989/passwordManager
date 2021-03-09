@@ -3,20 +3,17 @@ import {useState, useEffect } from "react";
 import Axios from 'axios';
 
 function App() {
-
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordList, setPasswordList] = useState([])
 
   useEffect(()=> {
     Axios.get('http://localhost:3001/showpasswords').then((response) => {
-      console.log(response.data);
+      setPasswordList(response.data);
     });
   }, []);//[]Siginica que se llama una vez  se carga la pagina 
-
-
-
 
   const addPassword = () => {
     Axios.post('http://localhost:3001/addpassword', {
@@ -59,7 +56,15 @@ function App() {
         }}
       />
       <button onClick={addPassword}>Add password</button>
+    </div> 
+
+    <div className="Passwords">
+      {passwordList.map((val)=> {
+        return <div> {val.name} </dif>
+      })}
+
     </div>
+    
   </div>
 }
 

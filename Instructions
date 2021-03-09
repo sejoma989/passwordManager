@@ -240,10 +240,20 @@ toda la pagina.
 Lo que se quiere correr en el ciclo del useEffect es un Axios.getrequest, donde se le 
 pasa la URL de la api 'http://localhost:3001/showpasswords') luego se puede pasar una promesa 
 que se ejecuta luego de que Axios.get recibe los datos del request en un objeto llamado response
-el cual tiene una propiedad data con todos los datos de la base de datos.
+el cual tiene una propiedad data con todos los datos de la base de datos
 Por ahora solo se muestra lo que tiene la base de datos por consola.
 En este momento cada que se cargue la pagina se hace una llamdo a la api y la consola muestra
-en un array los datos de la bd
+en un array los datos de la bd, esto infdica que se esta haciendo correctamente el get request.
+Ahora hay que hacer algo con esa informacion, por le momento viene en un array, con todos los passwords
+en la tabla. Es necesario crear un estado que va a representar a todos los passwords llamado passwordList y setPasswordsList
+Este va a remplazar lo que se muestra por consola y contiene todos los calores de la base de datos  
+Ahora es necesario crear un div que muestre esta informacion en la parte baja del codigo
+la informacion de los passwords decodificados llamado Passwords, en donde se van a renderizar todos uno sobre otro.
+Por lo que es necesario  hacer en html o jsx una nueva iteracion de list donde
+se pongan los passwords para el titulo, por lo que es necesario saber de donde es 
+exactamente este password, para lo que se usa jsx: val.title porque title es el nombre de la variable.
+En val vienen todas las variables de la base de datosy el iv
+
 
 
 
