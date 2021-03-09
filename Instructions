@@ -252,7 +252,7 @@ la informacion de los passwords decodificados llamado Passwords, en donde se van
 Por lo que es necesario  hacer en html o jsx una nueva iteracion de list donde
 se pongan los passwords para el titulo, por lo que es necesario saber de donde es 
 exactamente este password, para lo que se usa jsx: val.title porque title es el nombre de la variable.
-En val vienen todas las variables de la base de datosy el iv
+En val vienen todas las variables de la base de datos: el iv, data de la contraseña y el id 
 
 
 

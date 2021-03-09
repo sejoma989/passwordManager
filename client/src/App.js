@@ -60,8 +60,12 @@ function App() {
 
     <div className="Passwords">
       {passwordList.map((val)=> {
-        return <div> {val.name} </dif>
-      })}
+        return (
+          <div classname="password">
+            {val.name} </div>
+        ); 
+        
+      })};
 
     </div>
     
