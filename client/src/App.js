@@ -62,14 +62,15 @@ function App() {
       {passwordList.map((val)=> {
         return (
           <div classname="password">
-            {val.name} </div>
-        ); 
+            <h3>{val.name}</h3> 
+          </div>
+        )
         
       })};
 
     </div>
     
   </div>
-}
+};
 
 export default App;
