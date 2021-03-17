@@ -24,53 +24,53 @@ function App() {
     });    
   };
 
-  return <div className="App">
-    <div className="AddingPassword">
-      <h1>My password Manager</h1>
-      <input 
-        type="text" 
-        placeholder="Ej. Facebook" 
-        onChange={(event) => {
-          setName(event.target.value);
-        }} 
-      />
-      <input 
-        type="text" 
-        placeholder="Ej. www.facebook.com" 
-        onChange={(event) => {
-          setUrl(event.target.value);
-        }}
-      />
-      <input 
-        type="text" 
-        placeholder="Ej. pepito@yimail.com" 
-        onChange={(event) => {
-          setUsername(event.target.value);
-        }}
-      />
-      <input 
-        type="text" 
-        placeholder="Ej. password123" 
-        onChange={(event) => {
-          setPassword(event.target.value);
-        }}
-      />
-      <button onClick={addPassword}>Add password</button>
-    </div> 
-
-    <div className="Passwords">
-      {passwordList.map((val)=> {
-        return (
-          <div classname="password">
-            <h3>{val.name}</h3> 
-          </div>
-        )
-        
-      })};
-
+  return (
+    <div className="App">
+      <div className="AddingPassword">
+        <h1>My password Manager</h1>
+        <input 
+          type="text" 
+          placeholder="Ej. Facebook" 
+          onChange={(event) => {
+            setName(event.target.value);
+          }} 
+        />
+        <input 
+          type="text" 
+          placeholder="Ej. www.facebook.com" 
+          onChange={(event) => {
+            setUrl(event.target.value);
+          }}
+        />
+        <input 
+          type="text" 
+          placeholder="Ej. pepito@yimail.com" 
+          onChange={(event) => {
+            setUsername(event.target.value);
+          }}
+        />
+        <input 
+          type="text" 
+          placeholder="Ej. password123" 
+          onChange={(event) => {
+            setPassword(event.target.value);
+          }}
+        />
+        <button onClick={addPassword}>Add password</button>
+      </div> 
+      
+      <div className="Passwords">
+        {passwordList.map((val) => {
+          return (
+            <div className="password">
+              <h3>{val.name}</h3> 
+            </div>
+          );
+        })}
+      </div>
     </div>
-    
-  </div>
-};
+  ); 
+}
+
 
 export default App;
