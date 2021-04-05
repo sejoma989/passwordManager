@@ -252,12 +252,28 @@ que muestre esta informacion en la parte baja del formulario
 la informacion de los passwords decodificados llamado Passwords, en donde se van a renderizar todos uno sobre otro.
 Por lo que es necesario  hacer en html o jsx una nueva iteracion de list donde
 se pongan los passwords para el titulo, por lo que es necesario saber de donde es 
-exactamente este password, para lo que se usa jsx: val.title porque title es el nombre de la variable.
-En val vienen todas las variables de la base de datos: el iv, data de la contraseña y el id y el nombre
+exactamente este password, para lo que se usa jsx: val.name porque name es el nombre de la variable.
+En val vienen todas las variables de la base de datos: el iv, data de la contraseña y el id y el nombre, url
 
 Se pone a mostrar el nombre contenido en el val debajo del formulario y se le 
-da estilo en app.css para que 
+da estilo en app.css para que se vean mas aparentes, ya que la idea es que se muestre la 
+contraseña cuando se pase el mouse por encima
 
+decryptPassword()
+Ahora se crea una funcion que hace una peticion al servidor
+para desencriptar las contraseñas al dar click en el boton
+con el nombre de cada una.
+Esta funcion recibe un objeto encryption con el iv y el password
+y hace un post request a traves de axios que va a devolver la contraseña desencriptada.
+Para crear la ruta en el index que muestre la contraseña desencriptada,
+esta ruta /decryptpassword recibo un objeto req, res y envia el 
+resultado de la operacion decrypt.
+Es necesario crear un llamado a la funcion decryptPassword cada vez que se haga click en el boton
+de la contraseña, y este se hace usando un listener onClick de eventos dentro del
+div de las contraseñas,el cual llama a la funcion decryptPassword con los parametros 
+password y iv de ese mismo campo, con el fin de desencriptar la contraseña para ese sitio 
 
-
+Hay un error que pide un argumento key dentro de cada div de passwords, el cual 
+se soluciona agregando una llave key al mapeo y luego definiendola al 
+final 
 

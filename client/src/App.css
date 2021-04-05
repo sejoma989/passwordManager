@@ -11,7 +11,7 @@
   justify-content: center;
   align-items: center;
   background-color: lightblue;
-  width: 60%;
+  width: 70%;
   height: 300px;
   border-radius: 20px;
   margin-top: 20px;
@@ -25,8 +25,6 @@
   margin: 10px;
   padding-left: 15px;
   font-size: 17px;
-
-
 }
 
 button {
@@ -38,18 +36,20 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20 px;
+  margin-top: 20px;
 }
 
 .password {
-  width: 300px;
-  height: 50px;
+  width: 60%;
+  height: 70px;
   background-color: black;
   border-radius: 7px;
   color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10 px;
-  font-size: 20 px;
+  margin: 10px;
+  font-size: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  cursor: pointer;
 }
