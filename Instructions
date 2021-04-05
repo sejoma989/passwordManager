@@ -274,6 +274,24 @@ div de las contraseñas,el cual llama a la funcion decryptPassword con los param
 password y iv de ese mismo campo, con el fin de desencriptar la contraseña para ese sitio 
 
 Hay un error que pide un argumento key dentro de cada div de passwords, el cual 
-se soluciona agregando una llave key al mapeo y luego definiendola al 
+se soluciona agregando una llave key al mapeo y luego definiendola nuevamente al 
 final 
+
+Ahora que se tiene la funcion para desencriptar las contraseñas pero se 
+muestran por consola, es necesario hacer que la plataforma la muestre. La 
+idea es que al dar click sobre el boton de cada sitio se muestre la contraseña. 
+
+En la funcion decryptPassword() se quiere basicamente mapear o iterar en cada 
+valor del passwordList() y cambiar el render de  <h3>{val.name}</h3>  al valor 
+que corresponda al id del valor que se esta iterando desde el onClick event,
+es decir, si coincide la base de datos con el sitio seleccionado.
+
+Para esto se agrega un nuevo valor a la funcion decryptPassword, ya que se 
+quiere tener acceso tambien al id del elemento para compararlo en el passwordList.
+Al iterar dentro del response buscando el id de elemento que coincida, 
+se quiere cambiar el valor name del elemento que en este momento es val.name, 
+por la contraseña desencriptada que esta en response.data.
+En caso de que no coincida simplemente se devuelve val 
+
+
 
