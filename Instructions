@@ -1,4 +1,18 @@
-Episodio 1
+# Password Manager By Pedro Tech
+https://www.youtube.com/watch?v=ZNY_PYGxrdc
+
+## Technologies stack:
+- ReactJS - Material UI for the frontend
+- NodeJS Create the API
+- MySQL
+
+## Objectives
+
+- Add new Password
+- Delete Passwords
+- Encrypt / Decrypt Passwords por razones de seguridad
+
+# Episodio 1
 
 Seguridad:
 Contraseñas de los servicios en un solo lugar
@@ -6,27 +20,30 @@ Almacenadas de manera segura y encriptada
 No permitirá agregar contraseñas básicas
 
 Se crea la carpeta del proyecto:
-/PASSWORD MANAGER
+
+/password_manager
 
 Dentro se crean 2 carpetas:
-/client: Almacena la aplicacion de React
+
+/client: Almacena la aplicacion de React que es el cliente que se conecta al server
 /server: Almacena la aplicacion creada con Node y Express
 
-En la carpeta cliente se instala la aplicacion de React:
-#npx create-react-app .
+En la carpeta /cliente se instala la aplicacion de React:
+
+    $ npx create-react-app .
 
 /server 
 
-En el servidor es necesario iniciar la aplicacion de nodeJS e instalar Express:
-#npm init
-#npm install express mysql 
+En el servidor es necesario iniciar la aplicacion de nodeJS e instalar Express, esto crea el package.json que va a permitir almacenar las dependencias
 
-Es necesario instalar cors el cual permite la conexion entre la api de front y la api del back 
-#npm install cors 
+    $ npm init -y
+    $ npm install express mysql 
 
-Ahora es necesario crear el punto de entrada para nuestro servidor, en package.json muestra por defecto a
-index.js 
-por lo tanto se crea un archivo con este nombre.
+Es necesario instalar cors el cual permite la conexion entre la api de front y la api del back para que no haya problema con las llamadas a las api
+    
+    $ npm install cors 
+
+Ahora es necesario crear el punto de entrada para nuestro servidor, en package.json muestra por defecto a **/index.js** por lo tanto se crea un archivo con este nombre.
 
 server/index.js 
 

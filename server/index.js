@@ -54,5 +54,5 @@ app.post('/decryptpassword', (req, res)=> {
 });
 
 app.listen(PORT, () => {
-    console.log('Server is running');
+    console.log(`Server is running in http://localhost:${PORT}`);
 });
