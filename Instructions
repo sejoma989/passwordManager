@@ -1,3 +1,20 @@
+Proyecto de un manejador sencillo de contraseñas:
+
+Objetivos del proyecto:
+Agregar nuevas contraseñas
+Borrar contraseñas
+Encriptar - Desencriptar passwords (Crypto)
+
+Tools:
+Front: React JS & Material UI
+Back: Node JS & Express creacion de api
+BD: MySQL
+
+
+Para correr cliente y servidor, se corre el comando 
+$npm start
+en cada uno de los directorios
+
 # Password Manager By Pedro Tech
 https://www.youtube.com/watch?v=ZNY_PYGxrdc
 
