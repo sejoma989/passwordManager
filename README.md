@@ -1,35 +1,33 @@
-Proyecto de un manejador sencillo de contraseñas:
+# Proyecto de un manejador sencillo de contraseñas:
 
-Objetivos del proyecto:
-Agregar nuevas contraseñas
-Borrar contraseñas
-Encriptar - Desencriptar passwords (Crypto)
+## Objetivos del proyecto:
+- Agregar nuevas contraseñas
+- Borrar contraseñas
+- Encriptar - Desencriptar passwords (Crypto)
 
-Tools:
-Front: React JS & Material UI
-Back: Node JS & Express creacion de api
-BD: MySQL
+## Tools:
+- Front: React JS & Material UI
+- Back: Node JS & Express creacion de api
+- BD: MySQL
+
+## Instructions
+Para correr cliente y servidor, se instalan las dependencias
+
+    $ npm install
+
+Para posteriormente lanzar cliente y servidor usando en cada uno de los directorios
+
+    $npm start
 
 
-Para correr cliente y servidor, se corre el comando 
-$npm start
-en cada uno de los directorios
-
-# Password Manager By Pedro Tech
+### Password Manager By Pedro Tech
 https://www.youtube.com/watch?v=ZNY_PYGxrdc
 
-## Technologies stack:
-- ReactJS - Material UI for the frontend
-- NodeJS Create the API
-- MySQL
-
-## Objectives
-
-- Add new Password
-- Delete Passwords
-- Encrypt / Decrypt Passwords por razones de seguridad
 
 # Episodio 1
+
+Este manejador de contraseñas es un proyecto sencillo para empezar con nodeJS y ReactJS, permite almacenar
+las diferentes contraseñas en un solo lugar. Las contraseñas van a ser guardadas encriptadas.
 
 Seguridad:
 Contraseñas de los servicios en un solo lugar
@@ -48,6 +46,8 @@ Dentro se crean 2 carpetas:
 En la carpeta /cliente se instala la aplicacion de React:
 
     $ npx create-react-app .
+
+Ya que este proceso toma un tiempo se procede a configurar el servidor
 
 /server 
 
