@@ -1,7 +1,8 @@
 const express = require('express');
-const app = express();
 const mysql = require('mysql');
 const cors = require('cors');
+
+const app = express();
 const PORT = 3001;
 
 const {encrypt, decrypt} = require("./EncryptionManager");
@@ -13,7 +14,7 @@ const db = mysql.createConnection({
     user: 'root',
     host: 'localhost',
     password: '', 
-    database: 'PasswordManager',
+    database: 'passwordmanager',
 });
 
 
@@ -53,6 +54,7 @@ app.post('/decryptpassword', (req, res)=> {
     res.send(decrypt(req.body));
 });
 
+// Servidor escuchando por el puerto previamente definido
 app.listen(PORT, () => {
     console.log(`Server is running in http://localhost:${PORT}`);
 });

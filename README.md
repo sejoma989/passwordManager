@@ -43,6 +43,8 @@ Dentro se crean 2 carpetas:
 /client: Almacena la aplicacion de React que es el cliente que se conecta al server
 /server: Almacena la aplicacion creada con Node y Express
 
+## Creacion de cliente
+
 En la carpeta /cliente se instala la aplicacion de React:
 
     $ npx create-react-app .
@@ -51,12 +53,14 @@ Ya que este proceso toma un tiempo se procede a configurar el servidor
 
 /server 
 
+## Creacion de servidor
+
 En el servidor es necesario iniciar la aplicacion de nodeJS e instalar Express, esto crea el package.json que va a permitir almacenar las dependencias
 
     $ npm init -y
     $ npm install express mysql 
 
-Es necesario instalar cors el cual permite la conexion entre la api de front y la api del back para que no haya problema con las llamadas a las api
+Es necesario instalar express, mysql y cors, el cual permite la conexion entre la api de front y la api del back para que no haya problema con las llamadas a las api
     
     $ npm install cors 
 
@@ -64,61 +68,101 @@ Ahora es necesario crear el punto de entrada para nuestro servidor, en package.j
 
 server/index.js 
 
+    const express = require('express');
+    const app = express();
+    const PORT = 3001;
+
+    app.listen(PORT, () => {
+        console.log(`Server is running in http://localhost:${PORT}`);
+    });
+
 Se llama a express y se crea una variable puerto que almacena
 el puerto de conexion, sera 3001 ya que React corre en el 3000
 
 Al metodo listen se pasa el puerto y una funcion que se va a ejecutar cuando el servidor
 establece conexion.
 
-Se verifica la conexion con el parametro:
-#node index.js 
-Cannot GET / -> Significa que la api esta corriendo pero aun no se le han creado rutas
+Se verifica la conexion con el comando que inicia el servidor:
+
+    $ node index.js 
+
+La respuesta que se obtiene en el navegador al acceder a la ruta localhost:3001 es:
+    
+    Cannot GET / -> 
+    
+Significa que la api esta corriendo, aun no se le han creado manejadores para las rutas.
+
+## Manejo de rutas en el servidor
 
 Se crea una funcion GET con la ruta / para hacer una prueba de las rutas
 
-Para no estar reiniciando el servidor cada que se haga un cambio se instala el modulo nodemon
-#npm install nodemon 
+Para manejar una ruta, se usa el objeto app que contiene a express. A este objeto se le hace un llamado a un metodo get, este metodo recibe la ruta a manejar, y un callback con los objetos req y res que se ejecuta al ingresar a la ruta
 
-Se hace un cambio en /package.json, se agrega un atributo scripts,
-dentro del cual va otro atributo start : "nodemon index.js", de esta manera cada que se llama a start 
-se ejecuta este comando para que los cambios se actualicen solos.
-con el siguiente comando se ejecuta la aplicacion
-#npm start
+    app.get('/', (req, res) => {
+        res.send("Hello World!! This is an app running nodejs on express!!");
+    });
+
+Para no estar reiniciando el servidor cada que se haga un cambio se instala el modulo nodemon de manera global, esto ya que al subir el servidor, no se quiere que corra en produccion con nodemon.
+
+    $ npm install -g nodemon 
+
+Para que nodemon funcione, se hace un cambio en /package.json, se agrega un atributo scripts, dentro del cual va otro atributo 
+    
+    "start" : "nodemon index.js", 
+
+de esta manera cada que se llama a start se ejecuta este comando para que los  cambios se actualicen solos. Con el siguiente comando se ejecuta ahora la aplicacion
+
+    $ npm start
+
+## Conexion a base de datos Mysql
 
 Ahora se va a hacer conexion con la base de datos, para lo cual se descarga
-la herramienta MYSQL Workbench. que requiere mysql-server corriendo en el equipo
+la herramienta MYSQL Workbench. que requiere mysql-server corriendo en el equipo.
+Para este caso se va a iniciar usando phpmyadmin que se encuentra corriendo en un servidor de xampp.
 
-Mysql workbench:
+### Base de datos en Mysql - phpmyadmin, workbench:
 
 Se crea un nuevo esquema en la instancia local de la base de datos en el puerto 3306
-con el nombre 'PasswordManager', que será la base de datos para este proyecto 
-Dentro de esta se crea una tabla llamada passwords, con los campos:
-{
-    id:primary key not null, auto incremental,
-    name: website name,
-    url: website url exact login,
-    username: email to log into the website,
-    password: ****** password for the site
+con el nombre **PasswordManager** que será la base de datos para este proyecto 
+Dentro de esta se crea una tabla llamada **passwords**, con los campos:
+
+    {
+        id:primary key not null, auto incremental,
+        name: website name,
+        url: website url exact login,
+        username: email to log into the website,
+        password: ****** password for the site
     }
 
 Se le da apply en la esquina derecha para crear la tabla.
 
-Para conectar la aplicacion con la tabla, es necesario llamar el modulo de mysql, para crear la 
-conexion es necesario crear un objeto db, que representa todas las querys a la base de datos, 
-este objeto tiene unos parametros que pertenecen a la configuracion de mysql
+Para conectar la aplicacion con la tabla, es necesario llamar el modulo de mysql, 
+
+    const mysql = require('mysql');
+
+para crear la conexion es necesario crear un objeto db, que representa todas las querys a la base de datos, este objeto tiene unos parametros que pertenecen a la configuracion de mysql
+
+    const db = mysql.createConnection({
+        user: 'root',
+        host: 'localhost',
+        password: '', 
+        database: 'PasswordManager',
+    });
+
+## Retomando trabajo con el cliente
 
 /client 
 
-Luego se pasa al lado del cliente en react, en esta carpeta, hay una que se llama
-src que tiene algunos archivos que no son utiles:
+Luego se pasa al lado del cliente en react, en este directorio, hay una carpeta que se llama **/src** que tiene algunos archivos que no son utiles:
 App.text.js, index.css, logo.svg, setupTest.js
 por lo que se borran, ademas se eliminan todas las referencias a estos archivos
-en /index.js a index.css 
-en /app.js a logo y se deja limpio el archivo app.js para comenzar a crear la estructura html
+en:
 
-client/App.js
+/index.js a index.css , en /app.js a logo y se deja limpio el archivo app.js para comenzar a crear la estructura html, se deja solo la impresion de un mensaje "Hello World from React"
 
-En App.css se le da estilo al front de la aplicacion de react para poder trabajar con ella
+En App.css se le comienza a dar estilo al front de la aplicacion de react para poder trabajar con ella, se borran todos los estilos en App.css
+
+19:28
 
 Para comenzar la aplicacion en react es necesario:
 #npm start
