@@ -127,7 +127,7 @@ con el nombre **PasswordManager** que será la base de datos para este proyecto
 Dentro de esta se crea una tabla llamada **passwords**, con los campos:
 
     {
-        id:primary key not null, auto incremental,
+        id:primary key not null, auto incremental, 5
         name: website name,
         url: website url exact login,
         username: email to log into the website,
@@ -160,28 +160,110 @@ en:
 
 /index.js a index.css , en /app.js a logo y se deja limpio el archivo app.js para comenzar a crear la estructura html, se deja solo la impresion de un mensaje "Hello World from React"
 
-En App.css se le comienza a dar estilo al front de la aplicacion de react para poder trabajar con ella, se borran todos los estilos en App.css
+En App.css se le comienza a dar estilo al front de la aplicacion de react para poder trabajar con ella, se borran todos los estilos en App.css y se crea un formulario basico de dos inputs y un boton para submit.
 
-19:28
+    function App() {
+      return (
+        <div className="App">
+          <div className='AddingPassword'>
+            <input type="text" placeholder="Ex. password"></input>
+            <input type="text" placeholder="Ex. facebook"></input>
+            <button>Add Password</button>
+          </div>
+        </div>
+      );
+    }
 
-Para comenzar la aplicacion en react es necesario:
-#npm start
 
-Para enviar la informacion escrita en el front al back se usa la libreria useState 
-para almacenar estados o states
-Son variables que almacenan el estado de la variable
-Reaccionan y almacenan cada cambio realizado que desencadenan renders
+Se le da un poco de estilo a la aplicacion de react, ya que los estilos por defecto se eliminaron.
+Prmero se estiiza el contenedor app que es el que contiene al resto de los elementos.
 
-Lo primero es importar userState del modulo de react 
-Luego se crean las variables que almacenaran los cambios, una por cada celda 
-Se inicializan con una cadena vacia los estados dentro de las cajas de texto,
- co una funcion onChange que detecta los cambios
-Co esto se tienen las variables que se le quieren enviar a la base de datos
+    .App {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
 
-En este momento ya se puede ingresar datos a la base de datos, solo se necesita crear la ruta en el
-backend accesible para insertar esos datos
+Posteriormente se estiliza el contenedor AddingPassword que contiene a los elementos input.
+
+    .AddingPassword {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: lightskyblue;
+      width: 70%;
+      height: 400px;
+      border-radius: 20px;
+      margin-top: 20px;
+    }
+
+Finalmente se le da estilo a los elementos input y el boton individualmnte
+
+    .AddingPassword button, input {
+      width: 300px;
+      height: 40px;
+      border: none;
+      border-radius: 7px;
+      margin: 10px;
+      padding-left: 15px;
+      font-size: 17px;
+    }
+
+    button{
+      cursor: pointer;
+    }
+
+
+Para enviar la informacion escrita en el front al back se usan hooks o estados de react importando la libreria **useState** 
+para almacenar estados o states. Los estados son variables que disparan rederizaciones en la pagina. Almacenan el estado de la variable Reaccionan y almacenan cada cambio realizado que desencadenan renders.
+
+Lo primero es importar userState del modulo de react. Luego se crean las variables que almacenaran los cambios, una por cada celda, es decir un hook para el title y otro hook para el password.
+
+Se define e inicializa cada uno de los hooks con una cadena vacia los estados dentro de las cajas de texto,o una funcion onChange que detecta los cambios
+
+    import { useState } from "react";
+
+    function App() {
+
+        const [password, setPassword] = useState("");
+        const [title, setTitle] = useState("");
+
+Para el evento onChange de cada uno de los inputs es necesario agregar el atributo onChange, que recibe un evento a traves de una funcion flecha, la cual a cada cambio del input de texto se actualiza usando setPassword con el atributo de event.target.value el cual retorna el valor de texto
+
+    return (
+      <div className="App">
+        <div className="AddingPassword">
+          <input
+            type="text"
+            placeholder="Ex. password"
+            onChange={(event) => {
+              setPassword(event.target.value);
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Ex. facebook"
+            onChange={(event) => {
+              setTitle(event.target.value);
+            }}
+          />
+          <button>Add Password</button>
+        </div>
+      </div>
+    );
+
+En este momento ya se tienen las dos variables necesarias para ingresar datos a la base de datos, estos valores estan en title y password creadas con el hook en App.js del lado del cliente.
+
+En este punto se necesita crear la ruta en el backend que sea accesible desde el frontend y permita enviar e insertar esos a la base de datos. Esta ruta es conocida como endpoint y es un punto de conexion entre el backend y el frontend permitiendo insertar esta data.
+
+En el servidor se crea una ruta post, ya que va a recibir datos que se van a insertar en la base de datos. Se va a llamar /addpassword
 
 Para esto se va a /server/index.js y se crea una ruta post en "/addpassword"
+
+# 26:34
+
 Es necesario acceder a los datos que existen en el formulario del frontend a través del
 objeto body del metodo req, se crea una variable que almacena los valores a insertar en la base de
 datos en orden Luego se llama al metodo query del objeto db que permite 
