@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 const PORT = 3001;
 
-const {encrypt, decrypt} = require("./EncryptionManager");
+// const {encrypt, decrypt} = require("./EncryptionManager");
 
 app.use(cors());
 app.use(express.json());
@@ -23,36 +23,53 @@ app.get('/', (req, res) => {
 });
 
 app.post('/addpassword', (req, res) => {
-   const {name, url, username, password} = req.body; 
-   const hashedPassword = encrypt(password);
+    const {name, url, username, password} = req.body;
 
-
-   db.query(
-       "INSERT INTO passwords (name, url, username, password, iv) VALUES (?,?,?,?,?)",
-       [name, url, username, hashedPassword.password, hashedPassword.iv], 
-       (err, result) => {
-           if (err) {
-               console.log(err);
-            } else {
-                res.send("Success");
-            }
-        }
-    );
-});
-
-app.get('/showpasswords', (req, res) => {
-    db.query("SELECT * FROM passwords", (err, result)=> {
-        if (err) {
+    db.query( "INSERT INTO passwords (name, url, username, password) VALUES (?,?,?,?)",[
+        name, 
+        url, 
+        username, 
+        password
+    ], (err, result) => {
+        if (err){
             console.log(err);
         } else {
-            res.send(result);
-        }        
+            res.send('Success!!!')
+        }
     });
 });
 
-app.post('/decryptpassword', (req, res)=> {
-    res.send(decrypt(req.body));
-});
+// app.post('/addpassword', (req, res) => {
+//    const {name, url, username, password} = req.body; 
+//    const hashedPassword = encrypt(password);
+
+
+//    db.query(
+//        "INSERT INTO passwords (name, url, username, password, iv) VALUES (?,?,?,?,?)",
+//        [name, url, username, hashedPassword.password, hashedPassword.iv], 
+//        (err, result) => {
+//            if (err) {
+//                console.log(err);
+//             } else {
+//                 res.send("Success");
+//             }
+//         }
+//     );
+// });
+
+// app.get('/showpasswords', (req, res) => {
+//     db.query("SELECT * FROM passwords", (err, result)=> {
+//         if (err) {
+//             console.log(err);
+//         } else {
+//             res.send(result);
+//         }        
+//     });
+// });
+
+// app.post('/decryptpassword', (req, res)=> {
+//     res.send(decrypt(req.body));
+// });
 
 // Servidor escuchando por el puerto previamente definido
 app.listen(PORT, () => {

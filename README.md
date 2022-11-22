@@ -262,40 +262,72 @@ En el servidor se crea una ruta post, ya que va a recibir datos que se van a ins
 
 Para esto se va a /server/index.js y se crea una ruta post en "/addpassword"
 
-# 26:34
+Para acceder a los datos en los campos input de la aplicacion de react dede el backend en node, se usa un objeto llamado body que viene en el objeto req.
+En cada request que se hace siempre viene un objeto body, de esa manera se pasan valores desde el frontend al backend usando el objeto request.
 
-Es necesario acceder a los datos que existen en el formulario del frontend a través del
-objeto body del metodo req, se crea una variable que almacena los valores a insertar en la base de
-datos en orden Luego se llama al metodo query del objeto db que permite 
-{
-generar una sentencia sql directamente para escribir valores en la base de datos, agregados como ?,
-Un array con los datos a pasar en la sentencia,
-Se toman dos valores de este query, que funciona como una promesa que se ejecuta cuando se cumple
-la funcion
-    err:almacena cualquier error que pueda producir el query -> se imprime en consola
-    result: contiene los mensajes que se le piden al frontend en caso que sea exitoso el query, escribir 
-    datos en la bd -> se envia un mensaje de exito
- }
+En este caso se tienen los valores de name, url, username y password, para insertarlos a la base de datos se usa el objeto db de conexion a la base de datos con el metodo query. Para esto se llama al metodo query del objeto de conexion de base de datos y se le pasa una plantilla de consultas que contiene dos parentesis, el primero define los nombres de las columnas a ser afectadas, el segundo define un ? por cada valor a modificar, el metodo tambien recibe luego de la plantilla, un array con las variables a insertar en orden, posteriormente un callback de sql que recibe un error en caso que flle, o un resultado que va a almacenar la respuesta.
 
-Para acceder y hacer una llamado al api de la ruta /addpassword es necesario instalar el modulo axios en 
-el frontend se ingresa al directorio del cliente y se instala como un modulo npm (npm install axios)
-Axios es una libreria que permite hacer consultas api a cualquier api.
+Se evalua lo que llega en la respuesta, si llega un error se muestra por cosonsola, y sino entonces se envia un send en el objeto response con un "Success"
 
-Tambien se puede usar fetch que es una funcion de javascript, pero axios es mas sencillo
-simplemente se importa en app.js (client) y se hace un api request cuando se de click en el boton "add password"
-se agrega la funcion onclick al boton en app.js que va a invocar una funcion addpassword que ejecutara la sentencia 
+    app.post('/addpassword', (req, res) => {
+        const {name, url, username, password} = req.body;
 
-Es necesario crear la funcion addpassword en donde lo unico que se hace es invocar axios y hacer un post request
-al endpoint o url de una api, en nuestro caso es 'http://localhost:3001/addpassword' la ruta creada en el 
-server. Al ser un post es necesario pasar los datos, se hace luego de la ruta a traves del objeto body pasando los datos
-que esta esperando en el lado del server, asignando los valores a cada una de las variables.
-Se prueba ingresando datos al formulario de react para ver is esta funcionando
-En este momento se obtienen 2 errores, uno es que no se ha usado cors, y lo otro es que no se ha 
-confifurado el backend para que parsee json desde el frontend.
-Para solucionar esto es necesario importar cors en el servidor, luego usarlo a traves de la app
+        db.query( "INSERT INTO passwords (name, url, username, password) VALUES (?,?,?,?)",[
+            name, 
+            url, 
+            username, 
+            password
+        ], (err, result) => {
+            if (err){
+                console.log(err);
+            } else {
+                res.send('Success!!!')
+            }
+        });
+    });
+
+## LLamado a la API
+
+Para acceder y hacer una llamado al api de la ruta /addpassword es necesario instalar el modulo axios en el frontend. Axios se ingresa al directorio del cliente y se instala como un modulo npm 
+
+    $ npm install axios 
+  
+Axios es una libreria que permite hacer consultas a cualquier api.
+
+Tambien se puede usar fetch que es una funcion de javascript, pero axios es mas sencillo.
+
+Para hacer una llamada a una API simplemente se importa en app.js (client) y se hace un api request creando un evento onclick en el boton submit, cuando se de click en el boton "add password" el manejador de eventos onclick va a disparar una funcion al boton en app.js que va a invocar una funcion **addPassword** que ejecutara la sentencia para hacer un llamado de axios usando un post request.
+
+Es necesario crear la funcion addpassword en donde lo unico que se hace es invocar axios y hacer un post request al endpoint o url de la api, en nuestro caso es 'http://localhost:3001/addpassword' la ruta creada en el server para el manejo de la insercion. Al ser un post es necesario pasar la ruta como primer argumento,y un objeto body pasando los datos de name, url, username y password que esta esperando en el lado del server, asignando los valores a cada una de las variables.
+
+    const addPassword = () => {
+      Axios.post('http://localhost:3001/addpassword', {
+        name, 
+        url, 
+        username, 
+        password
+      });
+    }
+
+Se prueba ingresando datos al formulario de react para ver is esta funcionando En este momento se obtienen 2 errores, uno es que no se ha usado cors, y lo otro es que no se ha confifurado el backend para que parsee el objeto json que viene desde el frontend.
+
+Para solucionar esto es necesario importar cors en el servidor,
+
+    const cors = require('cors');
+
+Luego usarlo a traves de la app
+
+    app.use(cors());
+
+Esto permite usar un frontend y un backend en un mismo pc y comunicarse entre si
+
 y luego usar express.json a traves de la app tambien para que el servidor interprete los json que vienen del frontend.
 
-Episodio 2
+    app.use(express.json());
+
+Al volver a comprobar se puede ver que ya se estan guardando los datos en la base de datos, se pueden ingresar nuevos datos, sin embargo en este momento la contraseña no esta encriptada y es algo que se va a revisar mas adelante.
+
+# Episodio 2
 
 Ahora la idea es encriptar las contraseñas usando la libreria crypto de NodeJS.
 Permite encriptar usando varios algoritmos,y desencriptar tambien.
