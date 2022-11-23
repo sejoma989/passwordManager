@@ -329,76 +329,100 @@ Al volver a comprobar se puede ver que ya se estan guardando los datos en la bas
 
 # Episodio 2
 
-Ahora la idea es encriptar las contraseñas usando la libreria crypto de NodeJS.
-Permite encriptar usando varios algoritmos,y desencriptar tambien.
+## Encriptacion
 
-Los Password en este momento los recibe el back como un atributo del body
-desde el front, pasos para encriptar:
+Ahora la idea es encriptar las contraseñas usando la libreria **crypto** de NodeJS. Esta libreria viene integrada con NodeJS y permite encriptar usando varios algoritmos,y desencriptar tambien. En este punto se borran los registros de prueba que se crearon en la base de datos y se quiere aprender la diferencia entre hashing y encryption.
 
-Se crea un archivo nuevo en el servidor 
+Los Password en este momento los recibe el back como un atributo del body desde el front, para encriptarlo, se crea un archivo nuevo en el servidor para manejar la encriptacion independientemente.
+
 /server/EncryptionManager.js 
-En el se almacenan dos funciones, 
-Para encriptar la funcion encrypt que recibe la contraseña 
-Para desencriptar la funcion decrypt que entrega la encriptacion 
 
-server/index.js
+En este archivo se almacenan dos funciones, una que permite encriptar llamada **encrypt** que recibe la contraseña y crea una variable password encriptada y otra funncion **decrypt** que permite desencriptar la contraseña para leerla. 
+
+En este nuevo modulo se importa el paquete **crypto** que viene por defecto en node.
+
+La funcion encrypt recibe una contraseña como argumento
+
+    const encrypt = (password) => {}
+
+La funcion decrypt recibe una contraseña encriptada como argumento
+
+    const decrypt = (encryption) => {}
+
 Hay que exportar el modulo con las dos funciones de EncryptionManager debido a que esta en otro archivo 
-Para acceder a esos archivos en /index.js basta con importar el archivo con el 
-metodo require, accediendo a ambos elementos del archivo, de-estructurandolos en un {}
 
-/server/EncryptionManager.js 
-en la funcion encrypt hay que crear una variable secreta, que mantiene la encriptacion segura
-es necesario que sea de 32 caracteres de largo, cada encriptacion debe tener un iv, que es el identificador de encriptacion
-a este se le crea un buffer con 16 caracteres aleatorios el cualñ sera el identificador 
-se randomiza para que no sea igual en ningun caso 
+    module.exports = {encrypt, decrypt};
 
-Luego se comienza el cifrado en la variable cypher, la cual generará el algoritmo de encriptacion, 
-se crea una variable createCipheriv, 
-que recibe tres argumentos (
-    el metodo de cifrado, 
-    transformar la variable secret en un buffer,
-    el iv identificador para crear el cypher
-)
+Luego de requerir el modulo crypto se crea una nueva variable secret que es importante para el algoritmo de 32 caracteres de largo.
+
+    const crypto = require('crypto');
+    const secret = '77Dios7777Dios7777Dios7777Dios77'
+
+Para acceder a esos archivos en /index.js basta con importar el archivo con el metodo require, accediendo a ambos elementos del archivo, de-estructurandolos en un {}
+
+    const {encrypt, decrypt} = require("./EncryptionHandler.js");
+
+En la funcion encrypt del EncryptionHandler hay que crear una variable secreta, que mantiene la encriptacion segura
+es necesario que sea de 32 caracteres de largo, cada encriptacion debe tener un **iv**, que es el identificador de encriptacion, a este se le crea un buffer con 16 caracteres aleatorios el cual sera el identificador que se randomiza para que no sea igual en ningun caso.
+
+Luego se comienza el cifrado en la variable **cypher**, la cual generará el algoritmo de encriptacion. Esta variable invoca el metodo de **crypto.createCipheriv()**, 
+que recibe tres argumentos: (argumento de cifrado, transformar la variable secret en un buffer, el iv identificador para crear el cypher)
+
+El argumento de cifrado es una opcion ente muchas, no deberia ser de mucha preocupacion, en este caso se usa 'aes-256-ctr'. Luego se convierte el **secret** en un **Buffer**, finalmnete se le pasa el **iv**
+
+    const encrypt = (password) => {    
+        const cipher = crypto.createCipheriv(
+            'aes-256-ctr', 
+            Buffer.from(secret), 
+            iv
+        );       
+
+Este **createCipheriv** es una especie de llave unica que va a permitir encriptar la contraseña, la contraseña encriptada es una nueva constante **encryptedPassword** el resultado de crear un buffer y concatenar un array con dos argumentos. El primero es el valor del password encriptado, y luego se agrega un final al cypher, sin esto puede haber errores.
+
+        const encryptedPassword = Buffer.concat([
+            cipher.update(password),
+            cipher.final(),
+        ]);
 
 
-Luego se crea otra variable llamada encryptedPassword, que será el resultado
-del encriptado hecho en la variable cypher, donde se crea un buffer que se concatena
-recibiendo dos argumentos {
-    first: el valor con el que se encripta la contraseña con la funcion update Para
-    que lo actualice a la version encriptada
-    second: El valor con el que finaliza la encriptacion de manera correcta
-}
+Al final se retorna la variable encryptedPassword la cual es un buffer que contiene el valor hash para esta encriptacion. Finalmente debe retornarse el hash encriptado **encryptedPassword** en formato string.
 
-Al final se retorna la variable encryptedPassword la cual es un buffer y necesita ser transformada a un 
-string. por lo cual se retorna con el metodo toString usando la codificacion de buffer
-Hex, que combina numeros y caracteres.
+Sin embargo para desencriptarlo no basta solo con pasar el valor del hash, seria muy facil para desencriptar, es necesario pasar el 
+identificador iv tambien convertido a string usando *hex*, por eso se guardan los dos valorees en la funcion encrypt como un  objeto que se retorna como json.
 
-Hasta este punto se retorna un hash encriptado en formato string 
-Sin embargo para desencriptarlo no basta solo con pasar el valor del hash, es necesario pasar el 
-identificador tambien, por eso se guardan los dos valorees en la funcion encrypt como un 
-objeto que se retorna como json.
+        return {
+            iv: iv.toString("hex"),
+            password: encryptedPassword.toString("hex") 
+        };
 
-Para hacer el proceso de desencriptado, Se crea la funcion decypher que recibe la encriptacion, 
-o el el objeto que entrega la funcion cypher.
-Se crea una constante que almacena de manera similar a cypher, un decipher que es el 
-desencriptador, el cual recibe la palabra secreta y el iv de la funcion cypher- Por lo tanto se accede
-al iv dentro de la variable encryption y se convierte a  un buffer ambas vbariables, 
-la palabra secreta y el iv en formato hex
-Hasta este punto se tiene una variable decipher que ocntiene 3 elementos: 
+Para hacer el proceso de desencriptado dentro de **decrypt** que recibe la encryption que representa al objeto que retorno la encriptacion,  Se crea la constante  **decipher** que almacena de manera similar a cypher, un decipher que es el desencriptador, el cual de la misma manera que el cypher recibe la palabra secreta y el iv, pero es el iv que viene en el objeto **encryption** convirtiendo de vuelta a un buffer partiendo de un hex de la funcion encryption.
 
-(
-    el metodo de cifrado(mismo de cipher), 
-    la variable secret en un buffer,
-    el encryption.iv que es el identificador que llega del cypher
-)
+    const decrypt = (encryption) => {
+        const decipher = crypto.createDecipheriv(
+            "aes-256-ctr",
+            Buffer.from(secret),
+            Buffer.from(encryption.iv, "hex")
+        );
+    
 
-Como punto funal se desencripta la contraseña y almacena en una variable decryptedPassword 
-la cual es similar a la funcion encryptedPassword pero lo que hace es tomar la variable convertida a buffer 
-convertirla a hex, hacer el update y entregar el resultado final.
+Como punto funal se desencripta la contraseña y almacena en una variable **decryptedPassword** que contiene la version final del password desencriptado.
+
+Es muy similar a lo que se tenia antes, funcion encryptedPassword pero lo que hace es tomar la variable y convertirla a buffer desde, el password que se envió de **encryption.password** transformandolo a un hex.
+
+        const decryptedPassword = Buffer.concat([
+            decipher.update(Buffer.from(encryption.password, "hex")),
+            decipher.final(),
+        ]);
 
 Al final se retorna el password desencriptado convertido en un string
 
-/index.js 
+        return decryptedPassword.toString()
+
+
+Hasta aca llega la parte pesada de la encriptacion
+
+## Guardar password encriptado en BD
+
 Debido a que los objetos de EncryptionManager ya fuerojn importados, 
 ahora es necesario encriptar el password antes de hacer un guardado en base de datos desde la
 ruta post de la app en /addpassword, 
