@@ -423,15 +423,22 @@ Hasta aca llega la parte pesada de la encriptacion
 
 ## Guardar password encriptado en BD
 
-Debido a que los objetos de EncryptionManager ya fuerojn importados, 
-ahora es necesario encriptar el password antes de hacer un guardado en base de datos desde la
-ruta post de la app en /addpassword, 
-para lo cual se crea la cariable hashedPassword que almacena la funcion encrypt con el argumento password recibido en la ruta 
-antes de hacer el query a la BD, para esto es necesario modificar el esquema de la BD y agregar un campo para
-almacenar el iv de cada uno de los passwords encriptados.
+Debido a que los objetos de EncryptionManager ya fuerojn importados, ahora es necesario encriptar el password antes de hacer un guardado en base de datos desde la ruta post de la app en /addpassword, 
+para lo cual se crea la variable **hashedPassword** que almacena la funcion encrypt con el argumento password recibido en la ruta. Sin embargo antes de hacer el query a la BD y guardar el registro hasheado de password.
 
-Luego se procede a hacer los cambios en la operacion en la base de datos, 
-se pasan los valores de hashedPassword password y iv para guardar en BD
+Sin embargo hay que recordar que apra desencriptar la contraseña hay que usar el iv, por lo que hay que guardarlo en la base de datos tambien, para esto es necesario modificar el esquema de la BD y agregar un campo para almacenar el iv de cada uno de los passwords encriptados.
+
+    ALTER TABLE `passwords` ADD `iv` VARCHAR(255) NOT NULL AFTER `password`; 
+
+Luego se procede a hacer los cambios en la operacion en la base de datos, se pasan los nuevos valores de **hashedPassword.password** en donde se pasaba password y **hashedPassword.iv** que es el nuevo campo correspondiente para guardar en BD
+
+    db.query( "INSERT INTO passwords (name, url, username, password, iv) VALUES (?,?,?,?,?)",[
+        name, 
+        url, 
+        username, 
+        hashedPassword.password, 
+        hashedPassword.iv
+    ],
 
 Episodio 3
 

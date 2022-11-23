@@ -18,18 +18,16 @@ const db = mysql.createConnection({
 });
 
 
-app.get('/', (req, res) => {
-    res.send("Hello World!! This is an app running nodejs on express!!");
-});
-
 app.post('/addpassword', (req, res) => {
     const {name, url, username, password} = req.body;
+    const hashedPassword = encrypt(password);
 
-    db.query( "INSERT INTO passwords (name, url, username, password) VALUES (?,?,?,?)",[
+    db.query( "INSERT INTO passwords (name, url, username, password, iv) VALUES (?,?,?,?,?)",[
         name, 
         url, 
         username, 
-        password
+        hashedPassword.password, 
+        hashedPassword.iv
     ], (err, result) => {
         if (err){
             console.log(err);
