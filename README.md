@@ -24,7 +24,7 @@ Para posteriormente lanzar cliente y servidor usando en cada uno de los director
 https://www.youtube.com/watch?v=ZNY_PYGxrdc
 
 
-# Episodio 1
+# Episodio 1, configuracion inicial de cliente y servidor
 
 Este manejador de contraseñas es un proyecto sencillo para empezar con nodeJS y ReactJS, permite almacenar
 las diferentes contraseñas en un solo lugar. Las contraseñas van a ser guardadas encriptadas.
@@ -327,7 +327,7 @@ y luego usar express.json a traves de la app tambien para que el servidor interp
 
 Al volver a comprobar se puede ver que ya se estan guardando los datos en la base de datos, se pueden ingresar nuevos datos, sin embargo en este momento la contraseña no esta encriptada y es algo que se va a revisar mas adelante.
 
-# Episodio 2
+# Episodio 2, proceso de encriptado de la contraseña
 
 ## Encriptacion
 
@@ -440,22 +440,34 @@ Luego se procede a hacer los cambios en la operacion en la base de datos, se pas
         hashedPassword.iv
     ],
 
-Episodio 3
+# Episodio 3, ruta para mostrar las contraseñas
 
-Construir ruta para desencriptar las contraseñas.
-En esta ruta lo que se quiere 
-es mostrar las constraseñas para poder usarlas.
-Se crea la ruta get /showpasswords en index.js , y en el mismo verbo get se crea
-una funcion req, res la cual contiene una funcion query, que contiene una funcion callback 
-que va a tomar un err y result y la data que se reciba de la base4 de datos 
-despues del statement se va a almacenar en result, en este 
-caso todas las contraseñas, antes de enviarlo es necesario verificar si tiene algun error 
+## Ruta para mostrar contraseñas en el back
 
-Get request en el front
-app.js 
+Lo proximo que se desea hacer es crear una ruta para mostrar los password alamacenados en el frontend, para esto se crea un nuevo manejador de ruta, con el verbo http get para mostrar todos los valores de la base de datos, de esta manera accederlos en el frontend.
+
+Se crea la ruta get **/showpasswords** en index.js y el callback que recibe el manejador de ruta con  los objetos req y res. En la funcion se crea un query al objeto db con una consulta sencilla, mostrar toda la informacion de constraseñas que es la tabla passwords de la db donde se almacenan las contraseñas. 
+
+Posterior a la consulta, este query tambien tiene un callback, que recibe el objeto err y result. Este callback va a procesar lo que llegue de la consulta. En caso que la consulta tenga alfun error se manda a imprimir por consola, en caso que sea exitosa, se manda el objeto result usando el *req* hacia el frontend.
+
+    app.get('/showpasswords', (req, res) => {
+        db.query("SELECT * FROM passwords", (err, result)=> {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }        
+        });
+    });
+
+## Consumo de la ruta get para mostrar contraseñas desde el front
+
+Ahora que se tiene la ruta para consultar los registros desde el back, es necesario consumir esa informacion desde el frontend, hacer un Get request en el front.
+
 Ya se tiene el get request en el back, ahora se necesita invocar desde el frontend 
-Se va a usar una funcion useefect que renderiza y hace un llamado 
-a la api directamente al entrar en la website
+Se va a usar un useefect que renderice y haga un llamado a la api directamente al entrar en la app y se llama cada vez que la pagina se renderice o actualice.
+
+
 Use efect es una funcion simple que se invoca cada que se
 quiera recargar los datos.
 La idea es que s ehaga una recarga de los datos solo cuando cambie el estado de
