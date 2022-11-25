@@ -464,35 +464,44 @@ Posterior a la consulta, este query tambien tiene un callback, que recibe el obj
 
 Ahora que se tiene la ruta para consultar los registros desde el back, es necesario consumir esa informacion desde el frontend, hacer un Get request en el front.
 
-Ya se tiene el get request en el back, ahora se necesita invocar desde el frontend 
-Se va a usar un useefect que renderice y haga un llamado a la api directamente al entrar en la app y se llama cada vez que la pagina se renderice o actualice.
+Ya se tiene el get request en el back, ahora se necesita invocar desde el frontend.
+
+En la aplicacion de React, se va a usar un useefect que es un hook cuya funcionalidad es hacer un llamado a la api al renderizar la pagina de la app, y se llama cada vez que la pagina se renderice o actualice, o cuando se determine
+
+En este caso se va a disparar el useeffect cuando la pagina se renderice, no cuando un estado o useState cambie, para que eso no suceda, al definir el useEffect, se grega luego un array vacio
+
+    useEffect(()=> {
+
+    }, [])
+
+Dentro del useEffect lo que se quiere hacer es un llamado a la API a trves de axios a la ruta exacta del get /showpasswords. Cuando se cierra el llamado se concatena una promesa then que recibe el resultado del llamado a la api como response, inicialmente lo que se hace es procesarlo y mostrarlo por consola, acediendo al atributo data que contiene los valores.
+
+Segun la respuesta de la consola, tambien como se puede ver en postman, la respuesta llega como un array de objetos, para lo cual hay que crear un nuevo hook useState que almacene el estado passwordList conteniendo la informacion de contraseñas que se recibe desde la base de datos, este hook tambien contiene a setPasswordList que permite cambiar el contenido y lo inicia como un array vacio
+
+      const [passwordList, setPasswordList] = useState([]);
+
+Posterior a crear un variable de estado, se accede al metodo setPasswordList del hook para agregar datos a la variable, los datos que se encuentran en response.data, ahora se tiene un estado con el valor de todos los passwords almacenados en la base de datos.
+
+Se crea un nuevo div justo debajo del exitente para mostrar las contraseñas. Se le da un className="Passwords", dentro del div se abren unas llaves indicando que va codigo de javascript, dentro se indica que se quiere hacer un mapeo a la variable passwordList, un mapeo indica que se hace un recorrido y se ejecuta una operacion para cada item del array, en este caso se va a retornar el codigo jsx o html que se va a crear para cada iteracion de la lista. Un elemento va a renderizar una linea de contraseñas
+
+      <div className="Passwords">
+          {
+            passwordList.map((val) => {
+              return <h1> {val.name} </h1>
+            })
+          }
+      </div>
+
+En val vienen todas las variables de la base de datos: el iv, data de la contraseña y el id y el nombre, asi como la url
+
+Se puede mostrar el nombre contenido en el val, para cada una de las contraseñas que se tienen. val contiene todos los datos de la fila en la base de datos para cada campo, teniendo **val.name**, **val.password** u **val.id**.
+
+No se quiere mostrar el iv o la contraseña pues no es informacion util al usuario, se quiere mostrar el nombre y cuando se pase por encima muestre la contraseña desemcriptada.
+
+Lo primero es crear un div.password que va a representar cada uno de los campos en la base de datos passwords.
 
 
-Use efect es una funcion simple que se invoca cada que se
-quiera recargar los datos.
-La idea es que s ehaga una recarga de los datos solo cuando cambie el estado de
-toda la pagina.
-Lo que se quiere correr en el ciclo del useEffect es un Axios.getrequest, donde se le 
-pasa la URL de la api 'http://localhost:3001/showpasswords') luego se puede pasar una promesa 
-que se ejecuta luego de que Axios.get recibe los datos del request en un objeto llamado response
-el cual tiene una propiedad data con todos los datos de la base de datos
-Por ahora solo se muestra lo que tiene la base de datos por consola.
-En este momento cada que se cargue la pagina se hace una llamdo a la api y la consola muestra
-en un array los datos de la bd, esto infdica que se esta haciendo correctamente el get request.
-Ahora hay que hacer algo con esa informacion, por le momento viene en un array, con todos los passwords
-en la tabla. Es necesario crear un estado que va a representar a todos los passwords llamado passwordList y setPasswordsList
-Este va a remplazar lo que se muestra por consola y contiene todos los calores de la base de datos  
-Ahora es necesario crear un div para solamente la contraseña
-que muestre esta informacion en la parte baja del formulario
-la informacion de los passwords decodificados llamado Passwords, en donde se van a renderizar todos uno sobre otro.
-Por lo que es necesario  hacer en html o jsx una nueva iteracion de list donde
-se pongan los passwords para el titulo, por lo que es necesario saber de donde es 
-exactamente este password, para lo que se usa jsx: val.name porque name es el nombre de la variable.
-En val vienen todas las variables de la base de datos: el iv, data de la contraseña y el id y el nombre, url
-
-Se pone a mostrar el nombre contenido en el val debajo del formulario y se le 
-da estilo en app.css para que se vean mas aparentes, ya que la idea es que se muestre la 
-contraseña cuando se pase el mouse por encima
+asda estilo en app.css para que se vean mas aparentes, ya que la idea es que se muestre la contraseña cuando se pase el mouse por encima
 
 decryptPassword()
 Ahora se crea una funcion que hace una peticion al servidor
