@@ -605,9 +605,13 @@ final
 
 ## Renderizado de las contraseñas desencriptadas en el front
 
-Ahora que se tiene la funcion para desencriptar las contraseñas pero se 
-muestran por consola, es necesario mostrarlos por pantalla reemplazando el campo nombre. La 
-idea es que al dar click sobre el boton de cada sitio se muestre la contraseña. 
+Ahora que se tiene la funcion para desencriptar las contraseñas pero se muestran por consola, es necesario mostrarlos por pantalla reemplazando el campo nombre. La idea es que al dar click sobre el boton de cada sitio se muestre la contraseña desencriptada en la caja que contiene el titulo, en este momento se esta mostrando por consola.
+
+Se puede apreciar en la renderizacion del elemento h3, que siempre se renderiza con val.title en el cliente. Para cambiar esto es necesario agregar un nuevo valor que se envia a la funcion de **decryptpassword()**, se quiere acceder al id del elemento. Una vez que se tiene, dentro de la funcion **decryptpassword()**, se reemplaza la linea en donde se esta mostrando por consola response.data, con un mapeo que hace el setter setPasswordList dentro de passwordList para que itere dentro del array de passwords, y encuentre el elemento que coincide con el id que se quiere cambiar. Se va a encontrar solo uno, y cuando se encuentre, se quiere cambiar su valor por otro diferente.
+
+Para cambiar el valor, se evalua el id que viene en cada uno de los elementos del array, representado por **val.id**, contra el elemento que se esta recibiendo en **encryption.id**, cuando se encuentr, lo que hace es devolver una nueva version de este campo
+
+
 
 En la funcion decryptPassword() se quiere basicamente mapear o iterar en cada 
 valor del passwordList() y cambiar el render de  <h3>{val.name}</h3>  al valor 

@@ -30,6 +30,20 @@ function App() {
       password: encryption.password,
       iv: encryption.iv,
     }).then((response) => {
+      setPasswordList(
+        passwordList.map((val) => {
+          return val.id == encryption.id 
+            ? {
+                id: val.id, 
+                password: val.password, 
+                name: response.data, 
+                url:val.url, 
+                username: val.username, 
+                iv:val.iv, 
+              } 
+            : val;
+          })
+        );
       console.log(response.data);
     });
   };
