@@ -9,21 +9,30 @@ function App() {
   const [url, setUrl] = useState("");
   const [passwordList, setPasswordList] = useState([]);
 
-  useEffect(()=> {
-    Axios.get('http://localhost:3001/showpasswords').then((response) => {
-      console.log(response.data);
+  useEffect(() => {
+    Axios.get("http://localhost:3001/showpasswords").then((response) => {
+      // console.log(response.data);
       setPasswordList(response.data);
-    })
-  }, [])
+    });
+  }, []);
 
   const addPassword = () => {
-    Axios.post('http://localhost:3001/addpassword', {
-      name, 
-      url, 
-      username, 
-      password
+    Axios.post("http://localhost:3001/addpassword", {
+      name,
+      url,
+      username,
+      password,
     });
-  }
+  };
+
+  const decryptPassword = (encryption) => {
+    Axios.post("http://localhost:3001/decryptpassword", {
+      password: encryption.password,
+      iv: encryption.iv,
+    }).then((response) => {
+      console.log(response.data);
+    });
+  };
 
   return (
     <div className="App">
@@ -58,15 +67,21 @@ function App() {
         />
         <button onClick={addPassword}>Add Password</button>
       </div>
+
       <div className="Passwords">
-          {passwordList.map((val) => {
-              return (
-                <div className="password">
-                  <h3>{val.name}</h3>
-                </div>
-              )
-            })
-          }
+        {passwordList.map((val, key) => {
+          return (
+            <div
+              className="password"
+              onClick={() => {
+                decryptPassword({ password: val.password, iv: val.iv });
+              }}
+              key={key}
+            >
+              <h3>{val.name}</h3>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

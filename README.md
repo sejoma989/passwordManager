@@ -126,13 +126,13 @@ Se crea un nuevo esquema en la instancia local de la base de datos en el puerto 
 con el nombre **PasswordManager** que será la base de datos para este proyecto 
 Dentro de esta se crea una tabla llamada **passwords**, con los campos:
 
-    {
-        id:primary key not null, auto incremental, 5
-        name: website name,
-        url: website url exact login,
-        username: email to log into the website,
-        password: ****** password for the site
-    }
+    CREATE TABLE `passwords` (
+      `id` int(5) NOT NULL,
+      `name` varchar(255) NOT NULL,
+      `url` varchar(124) NOT NULL,
+      `username` varchar(50) NOT NULL,
+      `password` varchar(255) NOT NULL,
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 Se le da apply en la esquina derecha para crear la tabla.
 
@@ -362,8 +362,16 @@ Para acceder a esos archivos en /index.js basta con importar el archivo con el m
 
     const {encrypt, decrypt} = require("./EncryptionHandler.js");
 
-En la funcion encrypt del EncryptionHandler hay que crear una variable secreta, que mantiene la encriptacion segura
-es necesario que sea de 32 caracteres de largo, cada encriptacion debe tener un **iv**, que es el identificador de encriptacion, a este se le crea un buffer con 16 caracteres aleatorios el cual sera el identificador que se randomiza para que no sea igual en ningun caso.
+En la funcion encrypt del EncryptionHandler hay que crear una variable secreta, que mantiene la encriptacion segura es necesario que sea de 32 caracteres de largo, cada encriptacion debe tener un **iv**, que es el identificador de encriptacion, a este se le crea un buffer con 16 caracteres aleatorios el cual sera el identificador que se randomiza para que no sea igual en ningun caso.
+
+    CREATE TABLE `passwords` (
+      `id` int(5) NOT NULL AUTO_INCREMENT,
+      `name` varchar(255) NOT NULL,
+      `url` varchar(124) NOT NULL,
+      `username` varchar(50) NOT NULL,
+      `password` varchar(255) NOT NULL,
+      `iv` varchar(255) NOT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 Luego se comienza el cifrado en la variable **cypher**, la cual generará el algoritmo de encriptacion. Esta variable invoca el metodo de **crypto.createCipheriv()**, 
 que recibe tres argumentos: (argumento de cifrado, transformar la variable secret en un buffer, el iv identificador para crear el cypher)
@@ -496,33 +504,109 @@ En val vienen todas las variables de la base de datos: el iv, data de la contras
 
 Se puede mostrar el nombre contenido en el val, para cada una de las contraseñas que se tienen. val contiene todos los datos de la fila en la base de datos para cada campo, teniendo **val.name**, **val.password** u **val.id**.
 
-No se quiere mostrar el iv o la contraseña pues no es informacion util al usuario, se quiere mostrar el nombre y cuando se pase por encima muestre la contraseña desemcriptada.
+No se quiere mostrar el iv o la contraseña encriptada pues no es informacion util al usuario, se quiere mostrar el nombre y cuando se pase por encima y le de click muestre la contraseña desencriptada.
 
-Lo primero es crear un div.password que va a representar cada uno de los campos en la base de datos passwords.
+Lo primero es crear un div.password que va a representar cada uno de los campos en la base de datos passwords, dentro se va a crear un titulo h3 que contiene el titulo de la contraseña
+
+      <div className="Passwords">
+          {passwordList.map((val) => {
+              return (
+                <div className="password">
+                  <h3>{val.name}</h3>
+                </div>
+              )
+            })
+          }
+      </div>
+
+Se le da estilo a los nuevos div que se crearon
+
+    .Passwords {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .password {
+      width: 400px;
+      height: 70px;
+      background-color: black;
+      border-radius: 7px;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px;
+      font-size: 20px;
+      font-family: Arial, Helvetica, sans-serif;
+      cursor: pointer;
+
+    }
+
+Una vez se tiene el estilo de la aplicacion, lo que se quiere es que al dar click en los contenedores que contienen la informacion del password, se cambie el texto del nombre de la contraseña al this.decriptedPassword.
+
+## Desencriptacion de contraseña
+
+Se crea un metodo decryptPassword() en el front que hace un llamado al backend e indica que se debe desencriptar un texto. Este llamado es un post que envia la contraseña y el iv correspondientes al campo
+
+    const decryptPassword = (encryption) => {
+      Axios.post('http://localhost:3001/decryptpassword', {
+        password: encryption.password,
+        iv: encryption.iv
+      });
+    }
 
 
-asda estilo en app.css para que se vean mas aparentes, ya que la idea es que se muestre la contraseña cuando se pase el mouse por encima
+Ahora se crea la ruta del lado del servidor que va a responder la peticion del frontend al servidor. Esta es una ruta post **/decryptpassword** que va a tomar los valores que vienen desde el front y devolver el valor desencriptado invocando al metodo decrypt() creado en el EncryptionHandler que recibe el valor encriptado del password y tambien el iv, que corresponden al objeto encryption. Eomo estos objetos se envian en el body desde el frontend por lo cual se accede a traves de req.body
 
-decryptPassword()
-Ahora se crea una funcion que hace una peticion al servidor
-para desencriptar las contraseñas al dar click en el boton
-con el nombre de cada una.
-Esta funcion recibe un objeto encryption con el iv y el password
-y hace un post request a traves de axios que va a devolver la contraseña desencriptada.
-Para crear la ruta en el index que muestre la contraseña desencriptada,
-esta ruta /decryptpassword recibo un objeto req, res y envia el 
-resultado de la operacion decrypt.
-Es necesario crear un llamado a la funcion decryptPassword cada vez que se haga click en el boton
-de la contraseña, y este se hace usando un listener onClick de eventos dentro del
-div de las contraseñas,el cual llama a la funcion decryptPassword con los parametros 
-password y iv de ese mismo campo, con el fin de desencriptar la contraseña para ese sitio 
+    app.post('/decryptpassword', (req, res)=> {
+        res.send(decrypt(req.body));
+    });
+
+Es necesario crear la promesa en el cliente para cuando la peticion post a la ruta /decryptpassword termina, inicialimente se va a tomar la respuesta y mostrarla por consola
+
+    const decryptPassword = (encryption) => {
+      Axios.post('http://localhost:3001/decryptpassword', {
+        password: encryption.password,
+        iv: encryption.iv
+      }).then((response) => {
+        console.log(response.data)
+      })
+    }
+
+
+Es necesario tambien crear un llamado a la funcion decryptPassword cada vez que se haga click en el campo que corresponde a la contraseña traida desde la base de datos, este se hace usando un listener onClick de eventos dentro del div de las contraseñas,el cual llama a la funcion decryptPassword con los parametros password y iv de ese mismo campo, con el fin de desencriptar la contraseña para ese sitio.
+
+      <div className="Passwords">
+        {passwordList.map((val) => {
+          return (
+            <div
+              className="password"
+              onClick={() => {
+                decryptPassword({ password: val.password, iv: val.iv });
+              }}
+            >
+              <h3>{val.name}</h3>
+            </div>
+          );
+        })}
+      </div>
 
 Hay un error que pide un argumento key dentro de cada div de passwords, el cual 
 se soluciona agregando una llave key al mapeo y luego definiendola nuevamente al 
 final 
 
+        {passwordList.map((val, key) => {
+            ...
+            key={key}
+        
+
+## Renderizado de las contraseñas desencriptadas en el front
+
 Ahora que se tiene la funcion para desencriptar las contraseñas pero se 
-muestran por consola, es necesario hacer que la plataforma la muestre. La 
+muestran por consola, es necesario mostrarlos por pantalla reemplazando el campo nombre. La 
 idea es que al dar click sobre el boton de cada sitio se muestre la contraseña. 
 
 En la funcion decryptPassword() se quiere basicamente mapear o iterar en cada 

@@ -48,9 +48,9 @@ app.get('/showpasswords', (req, res) => {
     });
 });
 
-// app.post('/decryptpassword', (req, res)=> {
-//     res.send(decrypt(req.body));
-// });
+app.post('/decryptpassword', (req, res)=> {
+    res.send(decrypt(req.body));
+});
 
 // Servidor escuchando por el puerto previamente definido
 app.listen(PORT, () => {
