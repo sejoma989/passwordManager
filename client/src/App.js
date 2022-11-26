@@ -29,22 +29,25 @@ function App() {
     Axios.post("http://localhost:3001/decryptpassword", {
       password: encryption.password,
       iv: encryption.iv,
+      // id: encryption.id
     }).then((response) => {
       setPasswordList(
         passwordList.map((val) => {
-          return val.id == encryption.id 
+          // console.log(val);
+          console.log(encryption);
+          return val.id === encryption.id
             ? {
-                id: val.id, 
-                password: val.password, 
-                name: response.data, 
-                url:val.url, 
-                username: val.username, 
-                iv:val.iv, 
-              } 
+                id: val.id,
+                password: val.password,
+                name: response.data,
+                url: val.url,
+                username: val.username,
+                iv: val.iv,
+              }
             : val;
-          })
-        );
-      console.log(response.data);
+        })
+      );
+      // console.log(response.data);
     });
   };
 
@@ -88,7 +91,11 @@ function App() {
             <div
               className="password"
               onClick={() => {
-                decryptPassword({ password: val.password, iv: val.iv });
+                decryptPassword({
+                  password: val.password,
+                  iv: val.iv,
+                  id: val.id,
+                });
               }}
               key={key}
             >

@@ -585,7 +585,7 @@ Es necesario tambien crear un llamado a la funcion decryptPassword cada vez que 
             <div
               className="password"
               onClick={() => {
-                decryptPassword({ password: val.password, iv: val.iv });
+                decryptPassword({ password: val.password, iv: val.iv, id:val.id });
               }}
             >
               <h3>{val.name}</h3>
@@ -609,21 +609,22 @@ Ahora que se tiene la funcion para desencriptar las contraseñas pero se muestra
 
 Se puede apreciar en la renderizacion del elemento h3, que siempre se renderiza con val.title en el cliente. Para cambiar esto es necesario agregar un nuevo valor que se envia a la funcion de **decryptpassword()**, se quiere acceder al id del elemento. Una vez que se tiene, dentro de la funcion **decryptpassword()**, se reemplaza la linea en donde se esta mostrando por consola response.data, con un mapeo que hace el setter setPasswordList dentro de passwordList para que itere dentro del array de passwords, y encuentre el elemento que coincide con el id que se quiere cambiar. Se va a encontrar solo uno, y cuando se encuentre, se quiere cambiar su valor por otro diferente.
 
-Para cambiar el valor, se evalua el id que viene en cada uno de los elementos del array, representado por **val.id**, contra el elemento que se esta recibiendo en **encryption.id**, cuando se encuentr, lo que hace es devolver una nueva version de este campo
+Para cambiar el valor, se evalua el id que viene en cada uno de los elementos del array, representado por **val.id**, contra el elemento que se esta recibiendo en **encryption.id**, cuando se encuentr, lo que hace es devolver una nueva version de este campo.ya que al dar click no se esta cambiando al 
 
+Hay un error en el codigo en este momento, lo que se descubre al hacer console log, es que no se esta enviando un elemento id al objeto encryption, por lo que no esta haciendo la comparacion dentro de la promesa del Axios dentro de decryptPassword, se soluciona con enviar tambien el id al hacer el llamado de la peticion en el listener onClick
 
+      onClick={() => {
+        decryptPassword({
+          password: val.password,
+          iv: val.iv,
+          id: val.id,
+        });
+      }}
 
-En la funcion decryptPassword() se quiere basicamente mapear o iterar en cada 
-valor del passwordList() y cambiar el render de  <h3>{val.name}</h3>  al valor 
-que corresponda al id del valor que se esta iterando desde el onClick event,
-es decir, si coincide la base de datos con el sitio seleccionado.
+En la funcion decryptPassword() se mapear o iterar en cada valor del passwordList, de esta manera cuando encuentre el elemento que coincide por ids, cambiar lo que se esta renderizando en el valor del div, 
 
-Para esto se agrega un nuevo valor a la funcion decryptPassword, ya que se 
-quiere tener acceso tambien al id del elemento para compararlo en el passwordList.
-Al iterar dentro del response buscando el id de elemento que coincida, 
-se quiere cambiar el valor name del elemento que en este momento es val.name, 
-por la contraseña desencriptada que esta en response.data.
-En caso de que no coincida simplemente se devuelve val 
+    <h3>{val.name}</h3>
+    
+Este **val.name** se va a cambiar en la funcion **decryptPassword**, primero se ejecuta el listener dentro del div renderizado en el front **password**, a esta funcion dentro del listener se le envia el password, iv, id. Esto va a crear el objeto encryption que es el que recibe el metodo **decryptPassword**. Este hace la peticion al backend en la ruta /decryptpassword con los parametros de password y iv. En el backend se tiene en esta ruta una peticino post que envia en el objeto **res.send** una peticion al metodo **decrypt** del EncryptionHandler, que es el que se encarga de generar el decipher usando el objeto encryption y usando sus atributos de iv y password, para retornar al front un string que es la cadena password desencriptada.
 
-
-
+En el front, si la peticion es exitosa, este string se recibe en response, de esta manera se ejecuta el setter  del hook setPasswordList para hacer un mapeo dentro del array de password. En caso que el id que se recibe de la contraseña desencriptada coincida con el elemento val.id de los div del front, se procede a reemplazar el atribuuto name que es el que se renderiza, por response.data que es el valor de la contraseña desencriptada
