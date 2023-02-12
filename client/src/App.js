@@ -55,7 +55,7 @@ function App() {
     <div className="App">
       <div className="AddingPassword">
         <input
-          type="text"
+          type="password"
           placeholder="Ex. password123"
           onChange={(event) => {
             setPassword(event.target.value);
